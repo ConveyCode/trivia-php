@@ -2,25 +2,30 @@
 
 namespace ConveyCode\Trivia;
 
-function echoln($string) {
-    echo $string."\n";
+function echoln($string)
+{
+    echo $string . "\n";
 }
-class Game {
+
+class Game
+{
     var $players;
     var $places;
-    var $purses ;
-    var $inPenaltyBox ;
+    var $purses;
+    var $inPenaltyBox;
     var $popQuestions;
     var $scienceQuestions;
     var $sportsQuestions;
     var $rockQuestions;
     var $currentPlayer = 0;
     var $isGettingOutOfPenaltyBox;
-    function  __construct(){
+
+    function __construct()
+    {
         $this->players = array();
         $this->places = array(0);
-        $this->purses  = array(0);
-        $this->inPenaltyBox  = array(0);
+        $this->purses = array(0);
+        $this->inPenaltyBox = array(0);
         $this->popQuestions = array();
         $this->scienceQuestions = array();
         $this->sportsQuestions = array();
@@ -32,13 +37,19 @@ class Game {
             array_push($this->rockQuestions, $this->createRockQuestion($i));
         }
     }
-    function createRockQuestion($index){
+
+    function createRockQuestion($index)
+    {
         return "Rock Question " . $index;
     }
-    function isPlayable() {
+
+    function isPlayable()
+    {
         return ($this->howManyPlayers() >= 2);
     }
-    function add($playerName) {
+
+    function add($playerName)
+    {
         array_push($this->players, $playerName);
         $this->places[$this->howManyPlayers()] = 0;
         $this->purses[$this->howManyPlayers()] = 0;
@@ -47,10 +58,14 @@ class Game {
         echoln("They are player number " . count($this->players));
         return true;
     }
-    function howManyPlayers() {
+
+    function howManyPlayers()
+    {
         return count($this->players);
     }
-    function  roll($roll) {
+
+    function roll($roll)
+    {
         echoln($this->players[$this->currentPlayer] . " is the current player");
         echoln("They have rolled a " . $roll);
         if ($this->inPenaltyBox[$this->currentPlayer]) {
@@ -61,7 +76,7 @@ class Game {
                 if ($this->places[$this->currentPlayer] > 11) $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] - 12;
                 echoln($this->players[$this->currentPlayer]
                     . "'s new location is "
-                    .$this->places[$this->currentPlayer]);
+                    . $this->places[$this->currentPlayer]);
                 echoln("The category is " . $this->currentCategory());
                 $this->askQuestion();
             } else {
@@ -73,12 +88,14 @@ class Game {
             if ($this->places[$this->currentPlayer] > 11) $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] - 12;
             echoln($this->players[$this->currentPlayer]
                 . "'s new location is "
-                .$this->places[$this->currentPlayer]);
+                . $this->places[$this->currentPlayer]);
             echoln("The category is " . $this->currentCategory());
             $this->askQuestion();
         }
     }
-    function  askQuestion() {
+
+    function askQuestion()
+    {
         if ($this->currentCategory() == "Pop")
             echoln(array_shift($this->popQuestions));
         if ($this->currentCategory() == "Science")
@@ -88,7 +105,9 @@ class Game {
         if ($this->currentCategory() == "Rock")
             echoln(array_shift($this->rockQuestions));
     }
-    function currentCategory() {
+
+    function currentCategory()
+    {
         if ($this->places[$this->currentPlayer] == 0) return "Pop";
         if ($this->places[$this->currentPlayer] == 4) return "Pop";
         if ($this->places[$this->currentPlayer] == 8) return "Pop";
@@ -100,14 +119,16 @@ class Game {
         if ($this->places[$this->currentPlayer] == 10) return "Sports";
         return "Rock";
     }
-    function wasCorrectlyAnswered() {
-        if ($this->inPenaltyBox[$this->currentPlayer]){
+
+    function wasCorrectlyAnswered()
+    {
+        if ($this->inPenaltyBox[$this->currentPlayer]) {
             if ($this->isGettingOutOfPenaltyBox) {
                 echoln("Answer was correct!!!!");
                 $this->purses[$this->currentPlayer]++;
                 echoln($this->players[$this->currentPlayer]
                     . " now has "
-                    .$this->purses[$this->currentPlayer]
+                    . $this->purses[$this->currentPlayer]
                     . " Gold Coins.");
                 $winner = $this->didPlayerWin();
                 $this->currentPlayer++;
@@ -123,7 +144,7 @@ class Game {
             $this->purses[$this->currentPlayer]++;
             echoln($this->players[$this->currentPlayer]
                 . " now has "
-                .$this->purses[$this->currentPlayer]
+                . $this->purses[$this->currentPlayer]
                 . " Gold Coins.");
             $winner = $this->didPlayerWin();
             $this->currentPlayer++;
@@ -131,7 +152,9 @@ class Game {
             return $winner;
         }
     }
-    function wrongAnswer(){
+
+    function wrongAnswer()
+    {
         echoln("Question was incorrectly answered");
         echoln($this->players[$this->currentPlayer] . " was sent to the penalty box");
         $this->inPenaltyBox[$this->currentPlayer] = true;
@@ -139,7 +162,9 @@ class Game {
         if ($this->currentPlayer == count($this->players)) $this->currentPlayer = 0;
         return true;
     }
-    function didPlayerWin() {
+
+    function didPlayerWin()
+    {
         return !($this->purses[$this->currentPlayer] == 6);
     }
 }
