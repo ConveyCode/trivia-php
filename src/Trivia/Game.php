@@ -32,22 +32,14 @@ class Game
         $this->scienceQuestions = [];
         $this->sportsQuestions = [];
         $this->rockQuestions = [];
-        for ($i = 0; $i < 50; $i++) {
+
+        $categorySize = 50;
+        for ($i = 0; $i < $categorySize; $i++) {
             array_push($this->popQuestions, "Pop Question " . $i);
             array_push($this->scienceQuestions, ("Science Question " . $i));
             array_push($this->sportsQuestions, ("Sports Question " . $i));
-            array_push($this->rockQuestions, $this->createRockQuestion($i));
+            array_push($this->rockQuestions, "Rock Question " . $i);
         }
-    }
-
-    public function createRockQuestion($index)
-    {
-        return "Rock Question " . $index;
-    }
-
-    public function isPlayable()
-    {
-        return ($this->howManyPlayers() >= 2);
     }
 
     public function add($playerName)
@@ -70,13 +62,19 @@ class Game
     {
         echoln($this->players[$this->currentPlayer] . " is the current player");
         echoln("They have rolled a " . $roll);
+
+        $lastPositionOnTheBoard = 11;
+        $boardSize = 12;
         if ($this->inPenaltyBox[$this->currentPlayer]) {
-            if ($roll % 2 != 0) {
+
+            $isOdd = $roll % 2 != 0;
+            if ($isOdd) {
                 $this->isGettingOutOfPenaltyBox = true;
                 echoln($this->players[$this->currentPlayer] . " is getting out of the penalty box");
                 $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] + $roll;
-                if ($this->places[$this->currentPlayer] > 11) {
-                    $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] - 12;
+
+                if ($this->places[$this->currentPlayer] > $lastPositionOnTheBoard) {
+                    $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] - $boardSize;
                 }
                 echoln($this->players[$this->currentPlayer]
                     . "'s new location is "
@@ -89,8 +87,8 @@ class Game
             }
         } else {
             $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] + $roll;
-            if ($this->places[$this->currentPlayer] > 11) {
-                $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] - 12;
+            if ($this->places[$this->currentPlayer] > $lastPositionOnTheBoard) {
+                $this->places[$this->currentPlayer] = $this->places[$this->currentPlayer] - $boardSize;
             }
             echoln($this->players[$this->currentPlayer]
                 . "'s new location is "
@@ -118,34 +116,48 @@ class Game
 
     public function currentCategory()
     {
+        $popCategory = "Pop";
+        $scienceCategory = "Science";
+        $sportCategory = "Sports";
+        $rockCategory = "Rock";
+
         if ($this->places[$this->currentPlayer] == 0) {
-            return "Pop";
+            return $popCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 4) {
-            return "Pop";
+            return $popCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 8) {
-            return "Pop";
+            return $popCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 1) {
-            return "Science";
+            return $scienceCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 5) {
-            return "Science";
+            return $scienceCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 9) {
-            return "Science";
+            return $scienceCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 2) {
-            return "Sports";
+            return $sportCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 6) {
-            return "Sports";
+            return $sportCategory;
         }
+
         if ($this->places[$this->currentPlayer] == 10) {
-            return "Sports";
+            return $sportCategory;
         }
-        return "Rock";
+
+        return $rockCategory;
     }
 
     public function wasCorrectlyAnswered()
@@ -201,6 +213,7 @@ class Game
 
     public function didPlayerWin()
     {
-        return !($this->purses[$this->currentPlayer] == 6);
+        $numberOfCoinsToWin = 6;
+        return !($this->purses[$this->currentPlayer] == $numberOfCoinsToWin);
     }
 }

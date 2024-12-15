@@ -8,15 +8,24 @@ use PHPUnit\Framework\TestCase;
 
 final class GoldenMasterTest extends TestCase
 {
+    private const GM_PATH = __DIR__ .  '/gm.txt';
+
     public function testGenerateOutput(): void
     {
+        $this->markTestSkipped('This test is only for generating the golden master');
         $times = 20000;
-        $this->generateManyOutputs($times, '/tmp/gm.txt');
-        $this->generateManyOutputs($times, '/tmp/gm2.txt');
-        $fileContentGm = file_get_contents('/tmp/gm.txt');
-        $fileContentGm2 = file_get_contents('/tmp/gm2.txt');
+        $this->generateManyOutputs($times, self::GM_PATH);
+    }
 
-        $this->assertSame($fileContentGm, $fileContentGm2);
+    public function testOutputMatchesGoldenMaster(): void
+    {
+        $times = 20000;
+        $actualPath = '/tmp/actual.txt';
+        $this->generateManyOutputs($times, $actualPath);
+        $expectedContent = file_get_contents(self::GM_PATH);
+        $actualContent = file_get_contents($actualPath);
+
+        $this->assertSame($expectedContent, $actualContent);
     }
 
     private function generateManyOutputs(int $times, string $filename): void
