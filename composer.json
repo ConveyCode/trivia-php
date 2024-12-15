@@ -7,6 +7,11 @@
             "ConveyCode\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "ConveyCode\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Fabien Salles",
@@ -14,5 +19,10 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "scripts": {
+        "tests": "./vendor/bin/phpunit"
+    }
 }
